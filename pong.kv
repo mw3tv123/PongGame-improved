@@ -19,6 +19,18 @@
 	player1: player_left
 	player2: player_right
 
+	canvas:
+		Rectangle:
+			pos: self.pos
+			size: self.size
+			source: 'background.jpg'
+
+	Label:
+		id: win_title
+		font_size: 70
+		center_x: root.width / 2
+		top: root.top - 50
+
     Label:
     	id: label_left
         font_size: 70

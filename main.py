@@ -44,29 +44,32 @@ class PongGame(Widget):
     player2 = ObjectProperty(None)
 
     # Put back paddles and ball to default position
-    def serve_ball(self, vel=(1, 0)):
+    def serve_ball(self, vel=(4, 0)):
+        self.ids.win_title.height = '0dp'
         self.ball.center = self.center
         self.ball.velocity = vel
         self.player1.center_y = self.center_y
         self.player2.center_y = self.center_y
 
     # Start game again
-    def reset(self):
+    def reset(self, instance):
         self.remove_widget(self.reset_bt)
-        self.remove_widget(self.winner_lb)
+        self.add_widget(self.ids.label_left)
+        self.add_widget(self.ids.label_right)
         Clock.schedule_interval(self.update, 1.0/60.0)
 
     # dt mean Delta Time
     def update(self, dt):
         # Check if player score reach maximum
-        if (self.player1.score >= 10) or (self.player2.score >= 10):
+        if (self.player1.score >= 1) or (self.player2.score >= 1):
             text = 'Player ' + ('1' if self.player1.score > self.player2.score else '2') + ' win!'
+            self.ids.win_title.size_hint_y = 1
+            self.ids.win_title.text = text
             self.remove_widget(self.ids.label_left)
             self.remove_widget(self.ids.label_right)
-            self.winner_lb = Label(text=text, bold=True, font_size=70, center_x=self.width/2, top=self.top*2/3)
             self.reset_bt = Button(text='RESET', font_size=70, center_x=self.width, top=self.top*2/3-10)
-            self.reset_bt.bind(on_press='')
-            self.add_widget(self.winner_lb)
+            self.reset_bt.bind(on_press=self.reset)
+            self.add_widget(self.reset_bt)
             return False
 
         # Else keep on update other functions
