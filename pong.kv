@@ -25,11 +25,19 @@
 			size: self.size
 			source: 'background.jpg'
 
-	Label:
-		id: win_title
-		font_size: 70
-		center_x: root.width / 2
-		top: root.top - 50
+	BoxLayout:
+		orientation: 'vertical'
+		
+		Label:
+			id: win_title
+			font_size: 70
+		
+		Button:
+			id: reset_bt
+			size_hint_y: None
+			font_size: 70
+			text: 'Reset'
+			on_press: root.reset
 
     Label:
     	id: label_left

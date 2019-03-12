@@ -42,6 +42,7 @@ class PongGame(Widget):
     ball = ObjectProperty(None)
     player1 = ObjectProperty(None)
     player2 = ObjectProperty(None)
+    pause = True
 
     # Put back paddles and ball to default position
     def serve_ball(self, vel=(4, 0)):
@@ -53,7 +54,10 @@ class PongGame(Widget):
 
     # Start game again
     def reset(self, instance):
-        self.remove_widget(self.reset_bt)
+        self.pause = False
+        self.ids.win_title.text = ''
+        self.ids.win_title.size_hint_y = None
+        self.ids.reset_bt.size_hint_y = None
         self.add_widget(self.ids.label_left)
         self.add_widget(self.ids.label_right)
         Clock.schedule_interval(self.update, 1.0/60.0)
@@ -61,15 +65,14 @@ class PongGame(Widget):
     # dt mean Delta Time
     def update(self, dt):
         # Check if player score reach maximum
-        if (self.player1.score >= 1) or (self.player2.score >= 1):
+        if (self.player1.score >= 10) or (self.player2.score >= 10):
+            self.pause = True
             text = 'Player ' + ('1' if self.player1.score > self.player2.score else '2') + ' win!'
             self.ids.win_title.size_hint_y = 1
             self.ids.win_title.text = text
+            self.ids.reset_bt.size_hint_y = 1
             self.remove_widget(self.ids.label_left)
             self.remove_widget(self.ids.label_right)
-            self.reset_bt = Button(text='RESET', font_size=70, center_x=self.width, top=self.top*2/3-10)
-            self.reset_bt.bind(on_press=self.reset)
-            self.add_widget(self.reset_bt)
             return False
 
         # Else keep on update other functions
@@ -93,9 +96,9 @@ class PongGame(Widget):
 
     # Move paddles
     def on_touch_move(self, touch):
-        if (touch.x < self.width / 3) and (self.player1.top < self.height or self.player1.y > 0):
+        if (touch.x < self.width / 3) and (self.player1.top < self.height or self.player1.y > 0) and not self.pause:
             self.player1.center_y = touch.y
-        if (touch.x > self.width - self.width / 3) and (self.player2.top < self.height or self.player2.y > 0):
+        if (touch.x > self.width - self.width / 3) and (self.player2.top < self.height or self.player2.y > 0) and not self.pause:
             self.player2.center_y = touch.y
 
 
